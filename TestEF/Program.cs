@@ -18,6 +18,16 @@ namespace TestEF
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            builder.Services.AddCors(option =>
+            {
+                option.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -31,6 +41,7 @@ namespace TestEF
 
             app.UseAuthorization();
 
+            app.UseCors("CorsPolicy");
 
             app.MapControllers();
 
